@@ -8,7 +8,9 @@
 <img src="WaterFlow.gif" width = "300">
 
 具体使用将对应的Layout文件拖拽到项目中
+
 <img src="WaterFlowLayout.png" width = "300">
+
 导入头文件`MQWaterFlowLayout.h` 
 遵守协议
 `@interface MQWaterFlowController ()<MQWaterFlowLayoutDelegate>`
@@ -38,6 +40,7 @@
 当不实现列数、行间距、列间距、内边距的代理方法时，会采用默认值
 
 <img src="GridFlowLayout.png" width = "300">
+
 导入头文件`MQGridFlowLayout.h` 
 遵守协议
 `@interface MQGridFlowController ()<MQGridFlowLayoutDelegate>`
@@ -61,6 +64,7 @@
 当不实现行间距、列间距、内边距的代理方法时，会采用默认值
 
 <img src="PhotoWallLayout.png" width = "300">
+
 导入头文件`MQWaterFlowLayout.h` 
 遵守协议
 `@interface  MQWaterFlowController ()<MQWaterFlowLayoutDelegate>`
