@@ -9,6 +9,8 @@
 
 具体使用将对应的Layout文件拖拽到项目中
 
+
+###样式一
 <img src="WaterFlowLayout.png" width = "300">
 
 1.导入头文件`MQWaterFlowLayout.h` 
@@ -45,6 +47,8 @@
 
 当不实现列数、行间距、列间距、内边距的代理方法时，会采用默认值
 
+###样式二
+
 <img src="GridFlowLayout.png" width = "300">
 
 1.导入头文件`MQGridFlowLayout.h` 
@@ -74,6 +78,8 @@
 ```
 
 当不实现行间距、列间距、内边距的代理方法时，会采用默认值
+
+###样式三
 
 <img src="PhotoWallLayout.png" width = "300">
 
