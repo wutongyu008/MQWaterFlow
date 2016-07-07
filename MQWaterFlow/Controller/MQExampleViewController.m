@@ -11,7 +11,7 @@
 #import "MQGridFlowController.h"
 #import "MQPhotoWallController.h"
 #import "MQExample.h"
-#import <MJRefresh.h>
+#import "MJRefresh.h"
 
 NSString *const reusedID = @"reusedID";
 

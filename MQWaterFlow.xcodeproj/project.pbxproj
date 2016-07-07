@@ -226,6 +226,7 @@
 				TargetAttributes = {
 					10756D401C48E50600C61C4E = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = 7GAG4ZG933;
 					};
 				};
 			};
@@ -439,6 +440,7 @@
 			baseConfigurationReference = EEDB25854E631D4866623FDD /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = MQWaterFlow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = mq.MQWaterFlow;
@@ -451,6 +453,7 @@
 			baseConfigurationReference = 8E1C171EFFA625FE2B433C95 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = MQWaterFlow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = mq.MQWaterFlow;

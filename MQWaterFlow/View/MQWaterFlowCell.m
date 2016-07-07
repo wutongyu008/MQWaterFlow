@@ -7,7 +7,7 @@
 //
 
 #import "MQWaterFlowCell.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 
 @interface MQWaterFlowCell()
 @property (weak, nonatomic) IBOutlet UIImageView *pictureView;

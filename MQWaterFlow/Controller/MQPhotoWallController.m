@@ -7,9 +7,9 @@
 //
 
 #import "MQPhotoWallController.h"
-#import <MJExtension.h>
-#import <MJRefresh.h>
-#import <UIImageView+WebCache.h>
+#import "MJExtension.h"
+#import "MJRefresh.h"
+#import "UIImageView+WebCache.h"
 #import "MQWaterModel.h"
 #import "MQWaterFlowCell.h"
 #import "MQPhotoWallLayout.h"

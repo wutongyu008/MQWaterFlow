@@ -13,13 +13,10 @@
 #import "MJProperty.h"
 #import "MJFoundation.h"
 #import <objc/runtime.h>
-#import "MJDictionaryCache.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-
-@implementation NSObject (Property)
 
 static const char MJReplacedKeyFromPropertyNameKey = '\0';
 static const char MJReplacedKeyFromPropertyName121Key = '\0';
@@ -28,12 +25,39 @@ static const char MJObjectClassInArrayKey = '\0';
 
 static const char MJCachedPropertiesKey = '\0';
 
+@implementation NSObject (Property)
+
+static NSMutableDictionary *replacedKeyFromPropertyNameDict_;
+static NSMutableDictionary *replacedKeyFromPropertyName121Dict_;
+static NSMutableDictionary *newValueFromOldValueDict_;
+static NSMutableDictionary *objectClassInArrayDict_;
+static NSMutableDictionary *cachedPropertiesDict_;
+
++ (void)load
+{
+    replacedKeyFromPropertyNameDict_ = [NSMutableDictionary dictionary];
+    replacedKeyFromPropertyName121Dict_ = [NSMutableDictionary dictionary];
+    newValueFromOldValueDict_ = [NSMutableDictionary dictionary];
+    objectClassInArrayDict_ = [NSMutableDictionary dictionary];
+    cachedPropertiesDict_ = [NSMutableDictionary dictionary];
+}
+
++ (NSMutableDictionary *)dictForKey:(const void *)key
+{
+    if (key == &MJReplacedKeyFromPropertyNameKey) return replacedKeyFromPropertyNameDict_;
+    if (key == &MJReplacedKeyFromPropertyName121Key) return replacedKeyFromPropertyName121Dict_;
+    if (key == &MJNewValueFromOldValueKey) return newValueFromOldValueDict_;
+    if (key == &MJObjectClassInArrayKey) return objectClassInArrayDict_;
+    if (key == &MJCachedPropertiesKey) return cachedPropertiesDict_;
+    return nil;
+}
+
 #pragma mark - --私有方法--
-+ (NSString *)propertyKey:(NSString *)propertyName
++ (id)propertyKey:(NSString *)propertyName
 {
     MJExtensionAssertParamNotNil2(propertyName, nil);
     
-    __block NSString *key = nil;
+    __block id key = nil;
     // 查看有没有需要替换的key
     if ([self respondsToSelector:@selector(mj_replacedKeyFromPropertyName121:)]) {
         key = [self mj_replacedKeyFromPropertyName121:propertyName];
@@ -55,21 +79,21 @@ static const char MJCachedPropertiesKey = '\0';
     }
     
     // 查看有没有需要替换的key
-    if (!key && [self respondsToSelector:@selector(mj_replacedKeyFromPropertyName)]) {
+    if ((!key || [key isEqual:propertyName]) && [self respondsToSelector:@selector(mj_replacedKeyFromPropertyName)]) {
         key = [self mj_replacedKeyFromPropertyName][propertyName];
     }
     // 兼容旧版本
-    if (!key && [self respondsToSelector:@selector(replacedKeyFromPropertyName)]) {
+    if ((!key || [key isEqual:propertyName]) && [self respondsToSelector:@selector(replacedKeyFromPropertyName)]) {
         key = [self performSelector:@selector(replacedKeyFromPropertyName)][propertyName];
     }
     
-    if (!key) {
+    if (!key || [key isEqual:propertyName]) {
         [self mj_enumerateAllClasses:^(__unsafe_unretained Class c, BOOL *stop) {
             NSDictionary *dict = objc_getAssociatedObject(c, &MJReplacedKeyFromPropertyNameKey);
             if (dict) {
                 key = dict[propertyName];
             }
-            if (key) *stop = YES;
+            if (key && ![key isEqual:propertyName]) *stop = YES;
         }];
     }
     
@@ -124,7 +148,7 @@ static const char MJCachedPropertiesKey = '\0';
 #pragma mark - 公共方法
 + (NSMutableArray *)properties
 {
-    NSMutableArray *cachedProperties = [MJDictionaryCache objectForKey:NSStringFromClass(self) forDictId:&MJCachedPropertiesKey];
+    NSMutableArray *cachedProperties = [self dictForKey:&MJCachedPropertiesKey][NSStringFromClass(self)];
     
     if (cachedProperties == nil) {
         cachedProperties = [NSMutableArray array];
@@ -154,7 +178,7 @@ static const char MJCachedPropertiesKey = '\0';
             free(properties);
         }];
         
-        [MJDictionaryCache setObject:cachedProperties forKey:NSStringFromClass(self) forDictId:&MJCachedPropertiesKey];
+        [self dictForKey:&MJCachedPropertiesKey][NSStringFromClass(self)] = cachedProperties;
     }
     
     return cachedProperties;
@@ -193,7 +217,7 @@ static const char MJCachedPropertiesKey = '\0';
 {
     [self mj_setupBlockReturnValue:objectClassInArray key:&MJObjectClassInArrayKey];
     
-    [[MJDictionaryCache dictWithDictId:&MJCachedPropertiesKey] removeAllObjects];
+    [[self dictForKey:&MJCachedPropertiesKey] removeAllObjects];
 }
 
 #pragma mark - key配置
@@ -201,14 +225,14 @@ static const char MJCachedPropertiesKey = '\0';
 {
     [self mj_setupBlockReturnValue:replacedKeyFromPropertyName key:&MJReplacedKeyFromPropertyNameKey];
     
-    [[MJDictionaryCache dictWithDictId:&MJCachedPropertiesKey] removeAllObjects];
+    [[self dictForKey:&MJCachedPropertiesKey] removeAllObjects];
 }
 
 + (void)mj_setupReplacedKeyFromPropertyName121:(MJReplacedKeyFromPropertyName121)replacedKeyFromPropertyName121
 {
     objc_setAssociatedObject(self, &MJReplacedKeyFromPropertyName121Key, replacedKeyFromPropertyName121, OBJC_ASSOCIATION_COPY_NONATOMIC);
     
-    [[MJDictionaryCache dictWithDictId:&MJCachedPropertiesKey] removeAllObjects];
+    [[self dictForKey:&MJCachedPropertiesKey] removeAllObjects];
 }
 @end
 
